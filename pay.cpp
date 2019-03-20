@@ -90,79 +90,24 @@ void separateAndSave(vector<Person> &employees, vector<string> &companyNames)
 {
 	float total = 0;
 	ofstream outData;
-	outData.open("Intel.txt");
-	for (unsigned int i = 0; i < employees.size(); i++)
+	for (unsigned int i = 0; i < employees.size(); i++) // check company names, then check employee
 	{
-	if ("Intel" == companyNames[i])
+		outData.open(companyNames[i] + ".txt");
+		
+		for (unsigned int k =0; k < employees.size(); k++)
 		{
-			outData << employees[i].fullName() << "\t"
-			<< employees[i].getEmployeeId() << "\t" 
-			<< companyNames[i] << "\t$" << fixed << setprecision(2) << employees[i].totalPay() << endl;
-			total += employees[i].totalPay();
+		if (companyNames[i] == employees[k].getCompanyName())
+		{
+			outData << employees[k].fullName() << "\t"
+			<< employees[k].getEmployeeId() << "\t" 
+			<< companyNames[k] << "\t$" << fixed << setprecision(2) << employees[k].totalPay() << endl;
+			total += employees[k].totalPay();
 		}
+		}
+		outData << "Total $" << fixed << setprecision(2) << total;
+		total = 0;
+		outData.close();
 	}
-	outData << "Total $" << total;
-	outData.close();
-	total = 0;
 	
-	outData.open("Boeing.txt");
-	for (unsigned int i = 0; i < employees.size(); i++)
-	{
-	if ("Boeing" == companyNames[i])
-		{
-			outData << employees[i].fullName() << "\t"
-			<< employees[i].getEmployeeId() << "\t" 
-			<< companyNames[i] << "\t$" << fixed << setprecision(2) << employees[i].totalPay() << endl;
-			total += employees[i].totalPay();
-		}
-	}
-	outData << "Total $" << total;
-	outData.close();
-	total = 0;
-	
-	outData.open("Douglas.txt");
-	for (unsigned int i = 0; i < employees.size(); i++)
-	{
-	if ("Douglas" == companyNames[i])
-		{
-			outData << employees[i].fullName() << "\t"
-			<< employees[i].getEmployeeId() << "\t" 
-			<< companyNames[i] << "\t$" << fixed << setprecision(2) << employees[i].totalPay() << endl;
-			total += employees[i].totalPay();
-		}
-	}
-	outData << "Total $" << total;
-	outData.close();
-	total = 0;
-	
-	outData.open("Raytheon");
-	for (unsigned int i = 0; i < employees.size(); i++)
-	{
-	if ("Raytheon" == companyNames[i])
-		{
-			outData << employees[i].fullName() << "\t"
-			<< employees[i].getEmployeeId() << "\t" 
-			<< companyNames[i] << "\t$" << fixed << setprecision(2) << employees[i].totalPay() << endl;
-			total += employees[i].totalPay();
-		}
-	}
-	outData << "Total $" << total;
-	outData.close();
-	total = 0;
-	
-	outData.open("HealthTech.txt");
-	for (unsigned int i = 0; i < employees.size(); i++)
-	{
-	if ("HealthTech" == companyNames[i])
-		{
-			outData << employees[i].fullName() << "\t"
-			<< employees[i].getEmployeeId() << "\t" 
-			<< companyNames[i] << "\t$" << fixed << setprecision(2) << employees[i].totalPay() << endl;
-			total += employees[i].totalPay();
-		}
-	}
-	outData << "Total $" << total;
-	outData.close();
-	total = 0;
+	/**/
 }
-
