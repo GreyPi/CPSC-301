@@ -13,48 +13,51 @@ struct  PERSON
 void Display(PERSON DisplayStruct[], int n);
 void FindRichest(PERSON FindStruct[], int n);
 void Deposit(char CustName[], PERSON DepositStruct[], int n);
+void readData(PERSON *&RD);
 
 int main()
 {
+	PERSON * readData(int & N);
+	
+	cout << * readData.Name << endl;
+	//Display(P, N);
+	//FindRichest(P, N);
+	//Deposit(customer, P, N);
+			
+	return 0;
+}
+
+void readData(PERSON *&RD, int n)
+{
 	ifstream inData;
 	inData.open("data.txt");
-	int N = 0;
 	char first[20];
 	char last[20];
-	char customer[20];
-	string numRecords;
 	
+	int N = 0;
+	string numRecords;
 	while (getline(inData, numRecords))
 	{
 		N++;
 	}
 	inData.close();
-	inData.open("data.txt");
 	
-	while(!inData.eof())
+	inData.open("data.txt");
+		while(!inData.eof())
 		{
-			PERSON P[N];
-			for (int i =0; i < N; i++)
+			for (int i =0; i < n; i++)
 				{
-					inData >>  P[i].Name;
-					strcpy(first, P[i].Name);
-					inData >> P[i].Name;
-					strcpy(last, P[i].Name);
-					strcpy(P[i].Name, first);
-					strcat(P[i].Name, " ");
-					strcat(P[i].Name, last);
-					inData >> P[i].Balance;
-					
-					
+					inData >>  RD[i].Name;
+					strcpy(first, RD[i].Name);
+					inData >> RD[i].Name;
+					strcpy(last, RD[i].Name);
+					strcpy(RD[i].Name, first);
+					strcat(RD[i].Name, " ");
+					strcat(RD[i].Name, last);
+					inData >> RD[i].Balance;
 				}
-			Display(P, N);
-			FindRichest(P, N);
-			Deposit(customer, P, N);
 		}
 	
-	inData.close();
-			
-	return 0;
 }
 
 void Display(PERSON DisplayStruct[], int n)
@@ -124,5 +127,3 @@ void Deposit(char CustName[], PERSON DepositStruct[], int n)
 			cout << "Now your new balance is " << total << endl;
 			
 }
-	
-
