@@ -1,3 +1,5 @@
+Gregory Pierot
+Section 2
 #include "person.h"
 #include "person.cpp"
 #include <fstream>
