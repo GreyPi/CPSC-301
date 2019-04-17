@@ -1,5 +1,5 @@
-Gregory Pierot
-Section 2
+//Gregory Pierot
+//Section #2
 #include <iostream>
 #include <fstream>
 #include <string.h>
