@@ -1,5 +1,5 @@
-Gregory Pierot
-Section #2
+//Gregory Pierot
+//Section #2
 #include "person.h"
 
 Person::Person(string fName, string lName, float rate, float hours)
