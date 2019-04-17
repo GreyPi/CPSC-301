@@ -1,3 +1,5 @@
+//Gregory Pierot
+//Section #2
 //begin person.h
 #ifndef PERSON_H
 #define PERSON_H
