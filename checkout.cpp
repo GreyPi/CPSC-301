@@ -52,6 +52,7 @@ int readPersons(vector<Person *> & myCardholders)
 	int cardNo; 
 	bool act;
 	string fName, lName, line;
+	int highest = 0;
 	
     ifstream inData;
     inData.open("persons.txt");
@@ -64,38 +65,72 @@ int readPersons(vector<Person *> & myCardholders)
 		getline(inData, line);
 		Person * person = new Person(cardNo, act, fName, lName);
 		myCardholders.push_back(person);
+		if (highest < cardNo)
+		{
+			highest = cardNo;
+		}
+		
 	}
-    return 0;
+	return highest+1;
 }
 
 void readRentals(vector<Book *> & myBooks, vector<Person *> myCardholders) 
 {
+	
 	int bkId, crdId;
 	string line;
     ifstream inData;
     inData.open("persons.txt");
-	while (inData >> bkId)
+	while (inData >> bkId >> crdId)
 	{
-		inData >> crdId;
 		getline(inData, line);
-		/*for (unsigned int i = 0; i < myBooks.size(); i++)
+		for (unsigned int i = 0; i < myBooks.size(); i++)
 		{
 			if (bkId == myBooks.at(i)->getId())
 			{
+				for (unsigned int k = 0; k < myBooks.size(); k++)
+				{
+				if (crdId == myCardholders.at(k)->getId())
+				{
+					Person * ptr = myCardholders.at(k);
+					myBooks.at(k)->setPersonPtr(ptr);
+				}
+				}
 				
 			}
-		}*/
+			
+		}
 		// Unfinished
 		
 	}
     
 }
 
-void openCard(vector<Person *> & myCardholders, int nextID) {
-    return;
+void openCard(vector<Person *> & myCardholders, int nextID) 
+{
+	string fName, lName;
+	bool act = false;
+	cout << "Please enter the first name: ";
+	cin >> fName;
+	cout << "Please enter the last name: ";
+	cin >> lName;
+	string fullN = fName + lName;
+	for (unsigned int i = 0; i < myCardholders.size(); i++)
+	{
+		if (fullN == myCardholders.at(i)->fullName())
+		{
+			myCardholders.at(i)->setActive(true);
+			return;
+		}
+	}
+	Person * cardOp = new Person(nextID, act, fName, lName);
+	myCardholders.push_back(cardOp);
+	
 }
 
-Book * searchBook(vector<Book *> myBooks, int id) {
+Book * searchBook(vector<Book *> myBooks, int id) 
+{
+	
     return nullptr;
 }
 
@@ -104,9 +139,11 @@ int main()
 {
     vector<Book *> books;
     vector<Person *> cardholders;
+    int newCard = 0;
     readBooks(books);
-    readPersons(cardholders);
+    newCard = readPersons(cardholders);
     readRentals(books, cardholders);
+    openCard(cardholders, newCard);
     
     int choice;
     do
