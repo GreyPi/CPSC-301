@@ -30,5 +30,5 @@ personPtr = ptr;
 } // complete
 
 Person * Book::getPersonPtr() {
-    return nullptr; // complete
+     return personPtr; // complete
 }
