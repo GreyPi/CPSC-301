@@ -35,16 +35,16 @@ void readBooks(vector<Book *> & myBooks)
 	while (inData >> id)
 	{
 		getline(inData, line);
-		inData >> title;
-		getline(inData, line);
-		inData >> author;
-		getline(inData, line);
-		inData >> category;
-		getline(inData, line);
+		getline(inData,title);
+		//getline(inData, line);
+		getline(inData,author);
+		//getline(inData, line);
+		getline(inData, category);
+		//getline(inData, line);
 		Book * book = new Book(id, title, author, category);
 		myBooks.push_back(book);
 	}
-
+	
 }
 
 int readPersons(vector<Person *> & myCardholders)
@@ -58,20 +58,45 @@ int readPersons(vector<Person *> & myCardholders)
 	inData.open("persons.txt");
 	while (inData >> cardNo)
 	{
-		inData >> cardNo;
 		inData >> act;
 		inData >> fName;
 		inData >> lName;
-		getline(inData, line);
 		Person * person = new Person(cardNo, act, fName, lName);
 		myCardholders.push_back(person);
 		if (highest < cardNo)
 		{
 			highest = cardNo;
 		}
-
 	}
 	return highest + 1;
+}
+
+Book * getBook(vector<Book *> & myBooks, int bkId)
+{
+	cout << bkId << endl;
+	for (unsigned int i = 0; i < myBooks.size(); i++)
+	{
+		cout << myBooks.at(i)->getId() << endl;
+		if (bkId == myBooks.at(i)->getId())
+		{
+			cout << "Hello" << endl;
+			return myBooks.at(i);
+		}
+	}
+	return nullptr;
+}
+
+Person * getCard(vector<Person *> & myCardholders, int crdId)
+{
+	for (unsigned int i = 0; i < myCardholders.size(); i++)
+	{
+		if (crdId == myCardholders.at(i)->getId())
+		{
+			cout << "Hello" << endl;
+			return myCardholders.at(i);
+		}
+	}
+	return nullptr;
 }
 
 void readRentals(vector<Book *> & myBooks, vector<Person *> myCardholders)
@@ -81,40 +106,33 @@ void readRentals(vector<Book *> & myBooks, vector<Person *> myCardholders)
 	string line;
 	ifstream inData;
 	inData.open("persons.txt");
-	while (inData >> bkId >> crdId)
-	{
-		getline(inData, line);
+	while (inData >> bkId)
+	{	
+		inData >> crdId;
 		
+		cout << bkId << " " << crdId << endl;
+		/*for (unsigned int i = 0; i < myBooks.size(); i++)
+		{
+			if (bkId == myBooks.at(i)->getId())
+			{
+				if (crdId == myCardholders.at(i)->getId())
+				{
+					Person * ptr = myCardholders.at(i);
+					myBooks.at(i)->setPersonPtr(ptr);
+					myBooks.at(i)->getPersonPtr();
+				}
+			}*/
 		Book * bookPtr = getBook(myBooks, bkId);
 		Person * crdPtr = getCard(myCardholders, crdId);
 		bookPtr->setPersonPtr(crdPtr);
-
-	}
-
-}
-
-Book * getBook(vector<Book *> & myBooks, int bkId)
-{
-	for (unsigned int i = 0; i < myBooks.size(); i++)
-	{
-		if (bkId == myBooks.at(i)->getId())
-		{
-			return myBooks.at(i);
+		//bookPtr->getPersonPtr();
 		}
-	}
+		
+	
+inData.close();
 }
 
-Person * getCard(vector<Person *> myCardholders, int crdId)
-{
-	for (unsigned int i = 0; i < myCardholders.size(); i++)
-	{
-		if (crdId == myCardholders.at(i)->getId())
-		{
-			return myCardholders.at(i);
-		}
-}
-
-void openCard(vector<Person *> & myCardholders, int nextID)
+/*void openCard(vector<Person *> & myCardholders, int nextID)
 {
 	string fName, lName;
 	bool act = false;
@@ -134,12 +152,14 @@ void openCard(vector<Person *> & myCardholders, int nextID)
 	Person * cardOp = new Person(nextID, act, fName, lName);
 	myCardholders.push_back(cardOp);
 
-}
+}*/
 
 void bookCheckOut(vector<Book *> & myBooks, vector<Person *> & myCardholders)
 {
 	int cId, bId;
-	cout << "Please enter the card ID: " << endl;
+	Book * bkPtr;
+	//Person * prsnPtr;
+	cout << "Please enter the card ID: ";
 	cin >> cId;
 	Person * crdPtr = getCard(myCardholders, cId);
 	if (crdPtr->isActive() == true)
@@ -147,10 +167,19 @@ void bookCheckOut(vector<Book *> & myBooks, vector<Person *> & myCardholders)
 		cout << "CardHolder: " << crdPtr->fullName() << endl;
 		cout << "Please enter the book ID: " << endl;
 		cin >> bId;
-		Book * bkPtr = getBook(myBooks, bId);
-		cout << "Title: " << bkPtr->getTitle()
+		bkPtr = getBook(myBooks, bId);
+		cout << bkPtr->getId() << endl;
+		//prsnPtr = bkPtr->getPersonPtr();
+		
+			cout << "Title: " << bkPtr->getTitle()
 			<< endl << "Rental Completed" << endl;
+		
 	}
+	else 
+	{
+		cout << "ID not found" << endl;
+	}
+	/**/
 	
 }
 
@@ -160,17 +189,25 @@ void bookReturn(vector<Book *> & myBooks, vector<Person *> & myCardholders)
 	cout << "Please enter the book ID to return: " << endl;
 	cin >> bId;
 	Book * bkPtr = getBook(myBooks, bId);
+	for (unsigned int i = 0; i < myBooks.size(); i++)
+	{
+		if (bkPtr->getTitle() == myBooks.at(i)->getTitle())
+		{
+		cout << "Title : " << bkPtr->getTitle()
+		<< endl << "Return Completed" << endl;
+		}
+	}
 }
 
 int main()
 {
 	vector<Book *> books;
 	vector<Person *> cardholders;
-	int newCard = 0;
 	readBooks(books);
-	newCard = readPersons(cardholders);
+	cout << "after books" << endl;
+	readPersons(cardholders);
+	cout << "after persons" << endl;
 	readRentals(books, cardholders);
-	openCard(cardholders, newCard);
 
 	int choice;
 	do
@@ -182,7 +219,7 @@ int main()
 		switch (choice)
 		{
 		case 1:
-			// Book checkout
+			bookCheckOut(books, cardholders);// Book checkout
 			break;
 
 		case 2:
