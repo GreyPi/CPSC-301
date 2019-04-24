@@ -68,6 +68,7 @@ int readPersons(vector<Person *> & myCardholders)
 			highest = cardNo;
 		}
 	}
+	inData.close();
 	return highest + 1;
 }
 
@@ -105,7 +106,7 @@ void readRentals(vector<Book *> & myBooks, vector<Person *> myCardholders)
 	int bkId, crdId;
 	string line;
 	ifstream inData;
-	inData.open("persons.txt");
+	inData.open("rentals.txt");
 	while (inData >> bkId)
 	{	
 		inData >> crdId;
