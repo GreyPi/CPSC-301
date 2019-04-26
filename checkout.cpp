@@ -37,11 +37,8 @@ void readBooks(vector<Book *> & myBooks)
 	{
 		getline(inData, line);
 		getline(inData,title);
-		//getline(inData, line);
 		getline(inData,author);
-		//getline(inData, line);
 		getline(inData, category);
-		//getline(inData, line);
 		Book * book = new Book(id, title, author, category);
 		myBooks.push_back(book);
 	}
@@ -99,7 +96,6 @@ Person * getCard(vector<Person *> & myCardholders, int crdId)
 
 void readRentals(vector<Book *> & myBooks, vector<Person *> myCardholders)
 {
-
 	int bkId, crdId;
 	string line;
 	ifstream inData;
@@ -117,29 +113,35 @@ void readRentals(vector<Book *> & myBooks, vector<Person *> myCardholders)
 void bookCheckOut(vector<Book *> & myBooks, vector<Person *> & myCardholders)
 {
 	int cId, bId;
+	
 	Book * bkPtr = nullptr;
-	//Person * pPtr = nullptr;
+	Person * pPtr = nullptr;
 	cout << "Please enter the card ID: ";
 	cin >> cId;
 	Person * crdPtr = getCard(myCardholders, cId);
 	if (crdPtr != nullptr)
 	{
+		bool found = false;
 		cout << "CardHolder: " << crdPtr->fullName() << endl;
 		cout << "Please enter the book ID: ";
 		cin >> bId;
 		bkPtr = getBook(myBooks, bId);
-		if (bkPtr->getId() == bId && bkPtr->getPersonPtr() == nullptr)
+		if (bkPtr != nullptr && bkPtr->getPersonPtr() == nullptr)
 		{
 			cout << "Title: " << bkPtr->getTitle()
 			<< endl << "Rental Completed" << endl;
-			//bkPtr->setPersonPtr(pPtr);
+			found = true;
+			bkPtr->setPersonPtr(pPtr);
 		}
-		if (bkPtr->getPersonPtr() != nullptr)
+		else if (found == false)
+		{
+			cout << "Book ID not found" << endl;
+		}
+		else if (bkPtr->getPersonPtr() != nullptr)
 		{
 			cout << "Book already checked out" << endl;
+			found = true;
 		}
-		else
-			cout << "Book ID not found" << endl;
 		
 	}
 	else
@@ -151,7 +153,7 @@ void bookCheckOut(vector<Book *> & myBooks, vector<Person *> & myCardholders)
 void bookReturn(vector<Book *> & myBooks, vector<Person *> & myCardholders)
 {
 	int bId;
-	//Person * pPtr = nullptr;
+	Person * pPtr = nullptr;
 	cout << "Please enter the book ID to return: ";
 	cin >> bId;
 	Book * bkPtr = getBook(myBooks, bId);
@@ -159,7 +161,7 @@ void bookReturn(vector<Book *> & myBooks, vector<Person *> & myCardholders)
 	{
 		cout << bkPtr->getTitle() << endl
 		<< "Return completed" << endl;
-		//bkPtr->setPersonPtr(pPtr);
+		bkPtr->setPersonPtr(pPtr);
 	}
 	else
 	{
@@ -169,25 +171,7 @@ void bookReturn(vector<Book *> & myBooks, vector<Person *> & myCardholders)
 
 void viewAv(vector<Book *> & myBooks)
 {
-	for (unsigned int i =0; i < myBooks.size(); i++)
-	{
-		if (myBooks.at(i)->getPersonPtr() != nullptr)
-		{
-			cout << endl << "Book ID: " << myBooks.at(i)->getId() << endl
-			<< "Title: " << myBooks.at(i)->getTitle() << endl
-			<< "Author: " << myBooks.at(i)->getAuthor() << endl
-			<< "Category: " << myBooks.at(i)->getCategory() << endl
-			<< endl;
-		}
-		//else
-		//cout << "No available books" << endl;
-	}
-	
-	
-}
-
-void viewOut(vector<Book *> & myBooks)
-{
+	bool found = false;
 	for (unsigned int i =0; i < myBooks.size(); i++)
 	{
 		if (myBooks.at(i)->getPersonPtr() == nullptr)
@@ -197,7 +181,34 @@ void viewOut(vector<Book *> & myBooks)
 			<< "Author: " << myBooks.at(i)->getAuthor() << endl
 			<< "Category: " << myBooks.at(i)->getCategory() << endl
 			<< endl;
+			found = true;
 		}
+	}
+	if (found == false)
+		{
+			cout << "No available booke" << endl;
+		}
+	
+}
+
+void viewOut(vector<Book *> & myBooks)
+{
+	bool found = false;
+	for (unsigned int i =0; i < myBooks.size(); i++)
+	{
+		if (myBooks.at(i)->getPersonPtr() != nullptr)
+		{
+			cout << endl << "Book ID: " << myBooks.at(i)->getId() << endl
+			<< "Title: " << myBooks.at(i)->getTitle() << endl
+			<< "Author: " << myBooks.at(i)->getAuthor() << endl
+			<< "Category: " << myBooks.at(i)->getCategory() << endl
+			<< endl;
+			found = true;
+		}
+	}
+	if (found == false)
+	{
+		cout << "No outstanding rentals" << endl;
 	}
 }
 
@@ -275,6 +286,29 @@ void closeCrd(vector<Person *> & myCardholders)
 	}
 }
 
+void update(vector<Book *> & myBooks, vector<Person *> & myCardholders)
+{
+	ofstream outData; 
+	outData.open("persons.txt");
+	for (unsigned int i =0; i < myCardholders.size(); i++)
+	{
+		outData << myCardholders.at(i)->getId() 
+		<< " " << myCardholders.at(i)->isActive()
+		<< " " << myCardholders.at(i)->fullName() << endl;
+	}
+	outData.close();
+	
+	outData.open("rentals.txt");
+	for (unsigned int k =0; k < myBooks.size(); k++)
+	{
+		outData << myBooks.at(k)->getId()
+		<< " " << myCardholders.at(k)->getId() << endl; 
+		
+	}
+	outData.close();
+	
+}
+
 int main()
 {
 	int newId;
@@ -322,7 +356,7 @@ int main()
 			break;
 
 		case 8:
-			// Must update records in files here before exiting the program
+			update(books, cardholders);// Must update records in files here before exiting the program
 			break;
 
 		default:
