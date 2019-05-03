@@ -41,7 +41,6 @@ int main() {
             // in case of one extra newline at end of file
             break;
         }
-        cout << left->data << " " << right->data << endl;
         op = getOperator(inFile);
 
         if (op == '+'){
@@ -180,7 +179,28 @@ void deleteNum(digit * num){
 
 // TODO: Implement function to add 2 numbers stored in 2 linked lists
 digit * addNumbers(digit * left, digit * right){ // this function makes numbers in order.
-    
+    int carry = 0;
+    //int check = 0;
+		while (left != nullptr || right != nullptr)
+		{
+			digit * result = new digit;
+			
+			if (carry == 1)
+			{
+				result->data += carry;
+			}
+			result->data = left->data + right->data;
+			if (result->data > 9)
+			{
+				carry = 1;
+			}
+			result->data = result->data % 10;
+			left = left->next;
+			right = right->next;
+			digit * head = result;
+			result = result->next;
+		}
+		
     
     return nullptr;
 }
